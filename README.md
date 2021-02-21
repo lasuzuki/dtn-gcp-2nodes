@@ -38,7 +38,7 @@ In this section we will walk you through the creation of the `host1.rc` file. Fo
 
 ### The `ionadmin` configuration
 
-The `ionadmin` configuration file administrates and configures the interface for the local ION node contacts and manages shared memory resources used by ION.
+The `ionadmin` configuration assigns an identity (node number) to the node, optionally configures the resources that will be made available to the node, and specifies contact bandwidths and one-way transmission times.
 ````
 ## begin ionadmin 
 # Initialization command (command 1). 
@@ -83,6 +83,8 @@ m consumption 1000000
 ````
 ### The `ltpadmin` configuration
 
+The `ltpadmin` configuration specifies spans, transmission speeds, and resources for the Licklider Transfer Protocol convergence layer
+
 ````
 # Initialization command (command 1).
 1 32
@@ -104,6 +106,7 @@ s 'udplsi `internal_IP_of_node_1`:1113'
 ````
 
 ### The `bpadmin` configuration
+The `bpadmin` configuration specifies all of the open endpoints for delivery on your local end and specifies which convergence layer protocol(s) you intend to use. 
 
 ````
 ## begin bpadmin 
@@ -157,6 +160,7 @@ s
 ````
 
 ## The `ipnadmin` configuration
+The `ipnadmin` configuration maps endpoints at "neighboring" (topologically adjacent, directly reachable) nodes to convergence-layer addresses.
 ````
 ## begin ipnadmin 
 # ipnrc configuration file for host1 in a 3node ltp/tcp test. 
@@ -175,6 +179,7 @@ a plan 2 ltp/2
 ## end ipnadmin
 ````
 ## The `ionsecadmin` configuration
+The `ionsecadmin` enables bundle security (also avoid error messages in ion.log).
 ````
 ## begin ionsecadmin
 # Enable bundle security and avoid error messages in ion.log
