@@ -181,4 +181,32 @@ a plan 2 ltp/2
 1
 ## end ionsecadmin
 ````
+# Executing the configuration files
+
+On the terminal of `host 1` execute the command
+````
+$ ionstart -I host1.rc
+````
+Simmilarly, on the terminal of `host 2` execute the command
+````
+$ ionstart -I host2.rc
+````
+To send a message from `host 1` to `host 2`, you must firstly start `bpsink` in `host 2` by executing the command below
+````
+$ bpsink ipn:2.1 &
+```` 
+On the terminal of `host 1`, enter the following command and hit enter
+````
+$ echo "hi" | bpsource ipn:2.1
+````
+After the execution of the command above you should see in the terminal of `host 2` the following message
+````
+$ ION event: Payload delivered.
+$ 	payload length is 2.
+$	'hi'
+
+````
+The image below illustrates the above scenario plus `host 2` sending a `hello` message to `host 1`.
+
+<img src="https://github.com/lasuzuki/dtn-gcp/blob/main/blob/ION_example.png" width=400 align=center>
 
