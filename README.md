@@ -30,7 +30,7 @@ On [Google Cloud Console](console.cloud.google.com), at the top left corner, `cl
 
 When prompted, click `Create` a new instance. Create two instances in different regions following the guidance in section one of the [DTN 101 tutorial](https://github.com/lasuzuki/dtn-gcp). In this tutorial we have created one instance named `Golstone` in `Zone: us-central1` and the another instance named `Madrid` in `Zone: europe-west2-c`. The diagram below illustrates the two node communication that we will be developing in this tutorial.
 
-<img src="https://github.com/lasuzuki/dtn-gcp-2nodes/tree/main/blob/2nodes_ION.png" width=400 align=center>
+<img src="https://github.com/lasuzuki/dtn-gcp-2nodes/blob/main/blob/2nodes_ION.png" width=400 align=center>
 
 ## The configuration files
 
