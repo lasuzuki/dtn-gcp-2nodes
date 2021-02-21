@@ -208,5 +208,5 @@ $	'hi'
 ````
 The image below illustrates the above scenario plus `host 2` sending a `hello` message to `host 1`.
 
-<img src="https://github.com/lasuzuki/dtn-gcp/blob/main/blob/ION_example.png" width=400 align=center>
+<img src="https://github.com/lasuzuki/dtn-gcp-2nodes/blob/main/blob/ION_example.png" width=600 align=center>
 
