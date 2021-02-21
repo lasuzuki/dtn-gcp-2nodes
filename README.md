@@ -71,7 +71,8 @@ a range +1 +3600 1 1 1
 
 # Add more ranges.
 # We will assume every range is one second.
-# Note that ranges cover both directions, so you only need define one range for any combination of nodes.
+# Note that ranges cover both directions, so you 
+#only need define one range for any combination of nodes.
 a range +1 +3600 1 2 1
 a range +1 +3600 2 2 1
 
@@ -80,7 +81,7 @@ m production 1000000
 m consumption 1000000
 ## end ionadmin 
 ````
-## ### The `ltpadmin` configuration
+### The `ltpadmin` configuration
 
 ````
 # Initialization command (command 1).
@@ -91,14 +92,93 @@ a span 1 10 10 1400 10000 1 'udplso `external_IP_of_node_1`:1113'
 
 # Add another span. (to host2) 
 # Identify the span as engine number 2.
-# Use the command 'udplso 10.1.1.2:1113' to implement the link itself.  In this case, we use udp to connect to host2 using the default port.
+# Use the command 'udplso 10.1.1.2:1113' to implement the link itself.  
 a span 2 10 10 1400 10000 1 'udplso `external_IP_of_node_2`:1113'
 
 # Start command.
-# This command actually runs the link service output commands (defined above, in the "a span" commands).
-# It also starts the link service INPUT task 'udplsi `internal_IP_of_node_1`:1113' to listen locally on UDP port 1113 for incoming LTP traffic.
+# This command actually runs the link service output commands.
+# It also starts the link service INPUT task 'udplsi `internal_IP_of_node_1`:1113' 
+# to listen locally on UDP port 1113 for incoming LTP traffic.
 s 'udplsi `internal_IP_of_node_1`:1113'
 ## end ltpadmin 
 ````
 
+### The `bpadmin` configuration
+
+````
+## begin bpadmin 
+# Initialization command (command 1).
+1
+
+# Add an EID scheme.
+# The scheme's name is ipn.
+# This scheme's forwarding engine is handled by the program 'ipnfw.'
+# This scheme's administration program (acting as the custodian
+# daemon) is 'ipnadminep.'
+a scheme ipn 'ipnfw' 'ipnadminep'
+
+# Add endpoints.
+# Establish endpoints ipn:1.0, ipn:1.1, and ipn:1.2 on the local node.
+# ipn:1.0 is expected for custodian traffic.  The rest are usually
+# used for specific applications (such as bpsink).
+# The behavior for receiving a bundle when there is no application
+# currently accepting bundles, is to queue them 'q', as opposed to
+# immediately and silently discarding them (use 'x' instead of 'q' to
+# discard).
+a endpoint ipn:1.0 q
+a endpoint ipn:1.1 q
+a endpoint ipn:1.2 q
+
+# Add a protocol. 
+# Add the protocol named ltp.
+# Estimate transmission capacity assuming 1400 bytes of each frame (in
+# this case, udp on ethernet) for payload, and 100 bytes for overhead.
+a protocol ltp 1400 100
+
+# Add an induct. (listen)
+# Add an induct to accept bundles using the ltp protocol.
+# The duct's name is 1 (this is for future changing/deletion of the
+# induct). 
+# The induct itself is implemented by the 'ltpcli' command.
+a induct ltp 1 ltpcli
+
+# Add an outduct (send to yourself).
+# Add an outduct to send bundles using the ltp protocol.
+a outduct ltp 1 ltpclo
+
+# Add an outduct. (send to host2)
+# Add an outduct to send bundles using the ltp protocol.
+a outduct ltp 2 ltpclo
+
+# Start bundle protocol engine, also running all of the induct, outduct,
+# and administration programs defined above
+s
+## end bpadmin 
+````
+
+## The `ipnadmin` configuration
+````
+## begin ipnadmin 
+# ipnrc configuration file for host1 in a 3node ltp/tcp test. 
+# Essentially, this is the IPN scheme's routing table.
+
+# Add an egress plan.
+# Bundles to be transmitted to node number 1 (that is, yourself).
+# The plan is to queue for transmission on protocol 'ltp' using
+# the outduct identified as '1.'
+a plan 1 ltp/1
+
+# Add other egress plans.
+# Bundles for elemetn 2 can be transmitted directly to host2 using
+# ltp outduct identified as '2.' 
+a plan 2 ltp/2
+## end ipnadmin
+````
+## The `ionsecadmin` configuration
+````
+## begin ionsecadmin
+# Enable bundle security and avoid error messages in ion.log
+1
+## end ionsecadmin
+````
 
